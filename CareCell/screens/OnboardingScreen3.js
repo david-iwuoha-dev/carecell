@@ -1,102 +1,121 @@
-import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, Dimensions, Animated } from 'react-native';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const OnboardingScreen3 = ({ onNext }) => {
+  const slideAnim = useRef(new Animated.Value(width)).current;
+
+  useEffect(() => {
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
-      
-      {/* Hero Image */}
-      <Image 
-        source={require('./assets/onboarding3image.png')} 
-        style={styles.image}
-      />
+    <View style={styles.container}>
+      <Animated.View style={[styles.slidingSection, { transform: [{ translateX: slideAnim }] }]}>
+        <View style={styles.imageWrapper}>
+          <Image 
+            source={require('../assets/onboarding3image.webp')} 
+            style={styles.heroImage}
+          />
+        </View>
+        <View style={styles.textGroup}>
+          <Text style={styles.title}>Track How You Feel: Your Body Speaks</Text>
+          <Text style={styles.description}>
+            Log your pain levels, hydration, mood, and sleep. CareCell learns your patterns and gently guides you with insights tailored to your body.
+          </Text>
+        </View>
+      </Animated.View>
 
-      {/* Text Content */}
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>
-        Track How You Feel — Your Body Speaks
-        </Text>
-        
-        <Text style={styles.description}>
-        Log your pain levels, hydration, mood, and sleep. CareCell learns your patterns and gently guides you with insights tailored to your body.
-        </Text>
-
-        {/* Pagination Dots */}
-        <View style={styles.pagination}>
+      <SafeAreaView style={styles.fixedBottomContainer}>
+        <View style={styles.paginationContainer}>
           <View style={styles.dot} />
           <View style={styles.dot} />
           <View style={[styles.dot, styles.activeDot]} />
         </View>
-
-        {/* Button */}
         <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={onNext}>
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
-      </View>
-
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF4E6', // Outer pink background
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#FFF4E6', 
   },
-  image: {
-    width: '100%',
-    height: '50%',
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-  },
-  contentContainer: {
+  slidingSection: {
     flex: 1,
-    padding: 30,
-    justifyContent: 'space-between',
+  },
+  imageWrapper: {
+    height: height * 0.5, 
+    width: '100%',
+    overflow: 'hidden',
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    borderBottomLeftRadius: 30, 
+    borderBottomRightRadius: 30,
+  },
+  textGroup: {
+    paddingHorizontal: 30,
+    paddingTop: 30,
   },
   title: {
-    fontSize: 26,
     fontFamily: 'Brand-Bold',
-    color: '#3D1A1A',
+    fontSize: 24,
+    color: '#1A1A1A',
     lineHeight: 32,
+    marginBottom: 15,
   },
   description: {
-    fontSize: 15,
     fontFamily: 'Brand-Regular',
-    color: '#6B5E5E',
+    fontSize: 14,
+    color: '#4A4A4A',
     lineHeight: 22,
-    marginTop: 10,
   },
-  pagination: {
+  fixedBottomContainer: {
+    paddingHorizontal: 30,
+    paddingBottom: 60,
+    paddingTop: 20,
+  },
+  paginationContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
+    marginBottom: 30, 
   },
   dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#F3D5D5',
+    backgroundColor: '#FFD1D1', 
+    marginHorizontal: 4,
   },
   activeDot: {
-    width: 24,
-    backgroundColor: '#B32626',
+    width: 24, 
+    backgroundColor: '#B22222', 
   },
   button: {
-    backgroundColor: '#B32626',
-    paddingVertical: 16,
-    borderRadius: 16,
+    backgroundColor: '#B22222',
+    height: 55,           
+    borderRadius: 12,     
+    justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',        
   },
   buttonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
+    color: '#FFF',
     fontFamily: 'Brand-Bold',
+    fontSize: 18,
   },
 });
 

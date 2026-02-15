@@ -22,7 +22,7 @@ const DonorAssessmentScreen = ({ onBack, onContinue }) => {
         <View style={styles.heroSection}>
           <View style={styles.heartCircle}>
             <Image 
-              source={require('./assets/icon/icon-health.png')} 
+              source={require('../assets/icon/icon-health.png')} 
               style={styles.heartIcon} 
             />
           </View>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   backIcon: {
-    fontSize: 28,
+    fontSize: 40,
     color: '#B22222',
   },
   heroSection: {
@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   mainButtonText: {
     color: '#FFF',

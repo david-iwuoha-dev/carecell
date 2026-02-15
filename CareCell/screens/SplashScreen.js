@@ -46,7 +46,7 @@ const SplashScreen = ({ onFinish }) => {
       {/* Brand Group - Logo, Title, Subtitle */}
       <View style={styles.brandGroup}>
         <Image 
-          source={require('./assets/logo.png')} 
+          source={require('../assets/logo1.png')} 
           style={styles.logo}
         />
         
@@ -70,32 +70,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF4E6',
   },
-  brandGroup: {
-    position: 'absolute',
-    top: 236,
-    left: 86,
-    width: 267,
-    height: 244,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
+ brandGroup: {
+  // 1. Remove absolute, top, and left
+  flex: 1, 
+  // 2. This centers it horizontally and vertically perfectly
+  justifyContent: 'center', 
+  alignItems: 'center',
+},
   logo: {
-    width: 115.91,
-    height: 150,
+    width: 180,
+    height: 100,
     resizeMode: 'contain',
-    marginBottom: 20,
+    marginBottom: 5,
   },
   title: {
     fontFamily: 'Brand-Bold',
     fontSize: 32,
     color: '#000000',
     textAlign: 'center',
+    
   },
   subtitle: {
     fontFamily: 'Brand-Regular',
     fontSize: 14,
     color: '#4A4A4A',
-    marginTop: 8,
+    marginTop: 2,
     textAlign: 'center',
   },
 });

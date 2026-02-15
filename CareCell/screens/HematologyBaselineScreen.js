@@ -6,9 +6,12 @@ import {
   TextInput, 
   TouchableOpacity, 
   SafeAreaView, 
-  ScrollView 
+  ScrollView,
+  Dimensions,
+  Image
 } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+
+const { height } = Dimensions.get('window');
 
 const HematologyBaselineScreen = ({ onBack, onContinue }) => {
   const [consent, setConsent] = useState(false);
@@ -32,15 +35,18 @@ const HematologyBaselineScreen = ({ onBack, onContinue }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        {/* Header */}
-        <View style={styles.header}>
+        {/* Header Section with Drop */}
+        <View style={styles.headerContainer}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Feather name="chevron-left" size={28} color="#B22222" />
+            <Image 
+              source={require('../assets/icon2/Vector.png')} 
+              style={styles.backVector} 
+              resizeMode="contain"
+            />
+            <Text style={styles.title}>Hematology Baseline</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>Hematology Baseline</Text>
+          <Text style={styles.subtitle}>Enter your most recent complete blood count results</Text>
         </View>
-
-        <Text style={styles.subtitle}>Enter your most recent complete blood count results</Text>
 
         {/* Informational Blue Box */}
         <View style={styles.infoBox}>
@@ -49,29 +55,30 @@ const HematologyBaselineScreen = ({ onBack, onContinue }) => {
           </Text>
         </View>
 
-        {/* Input Fields */}
+        {/* Form Section */}
         <View style={styles.form}>
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Hemoglobin (Hb) <Text style={styles.unitText}>g/dL</Text></Text>
-            <TextInput style={styles.input} placeholder="e.g., 8.5" keyboardType="decimal-pad" />
+            <TextInput style={styles.input} placeholder="e.g., 8.5" keyboardType="decimal-pad" placeholderTextColor="#999" />
             <Text style={styles.rangeText}>Normal range: 7-10 g/dL for SDC patients</Text>
           </View>
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>WBC Count <Text style={styles.unitText}>*10/uL</Text></Text>
-            <TextInput style={styles.input} placeholder="e.g., 12.5" keyboardType="decimal-pad" />
+            <TextInput style={styles.input} placeholder="e.g., 12.5" keyboardType="decimal-pad" placeholderTextColor="#999" />
             <Text style={styles.rangeText}>Normal range: 4.5-11.0*10/uL</Text>
           </View>
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Reticulocyte Count <Text style={styles.unitText}>%</Text></Text>
-            <TextInput style={styles.input} placeholder="e.g., 8.0" keyboardType="decimal-pad" />
+            <TextInput style={styles.input} placeholder="e.g., 8.0" keyboardType="decimal-pad" placeholderTextColor="#999" />
             <Text style={styles.rangeText}>Normal range: 0.5-2.5% (elevated in SDC)</Text>
           </View>
 
+          {/* Uniform Date Selector */}
           <View style={[styles.inputGroup, { zIndex: activeDropdown ? 2000 : 1 }]}>
             <Text style={styles.label}>Date of CBC Result</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={styles.dateRow}>
               
               {/* Day Dropdown */}
               <View style={{ width: '28%' }}>
@@ -80,7 +87,7 @@ const HematologyBaselineScreen = ({ onBack, onContinue }) => {
                   <Text style={styles.dropdownIcon}>▼</Text>
                 </TouchableOpacity>
                 {activeDropdown === 'day' && (
-                  <ScrollView style={[styles.dropdownList, { maxHeight: 200 }]} nestedScrollEnabled={true}>
+                  <ScrollView style={styles.dropdownList} nestedScrollEnabled={true}>
                     {days.map((d) => (
                       <TouchableOpacity key={d} style={styles.dropdownItem} onPress={() => selectDatePart('day', d)}>
                         <Text style={styles.dropdownItemText}>{d}</Text>
@@ -97,7 +104,7 @@ const HematologyBaselineScreen = ({ onBack, onContinue }) => {
                   <Text style={styles.dropdownIcon}>▼</Text>
                 </TouchableOpacity>
                 {activeDropdown === 'month' && (
-                  <ScrollView style={[styles.dropdownList, { maxHeight: 200 }]} nestedScrollEnabled={true}>
+                  <ScrollView style={styles.dropdownList} nestedScrollEnabled={true}>
                     {months.map((m) => (
                       <TouchableOpacity key={m} style={styles.dropdownItem} onPress={() => selectDatePart('month', m)}>
                         <Text style={styles.dropdownItemText}>{m}</Text>
@@ -114,7 +121,7 @@ const HematologyBaselineScreen = ({ onBack, onContinue }) => {
                   <Text style={styles.dropdownIcon}>▼</Text>
                 </TouchableOpacity>
                 {activeDropdown === 'year' && (
-                  <ScrollView style={[styles.dropdownList, { maxHeight: 200 }]} nestedScrollEnabled={true}>
+                  <ScrollView style={styles.dropdownList} nestedScrollEnabled={true}>
                     {years.map((y) => (
                       <TouchableOpacity key={y} style={styles.dropdownItem} onPress={() => selectDatePart('year', y)}>
                         <Text style={styles.dropdownItemText}>{y}</Text>
@@ -137,7 +144,7 @@ const HematologyBaselineScreen = ({ onBack, onContinue }) => {
             {consent && <View style={styles.checkInner} />}
           </TouchableOpacity>
           <Text style={styles.consentText}>
-            I consent to storing this medical data securely within CareCell for tracking and personalized care recommendations. This data will not be shared without my explicit permission.
+            I consent to storing this medical data securely within CareCell for tracking and personalized care recommendations.
           </Text>
         </View>
 
@@ -156,26 +163,75 @@ const HematologyBaselineScreen = ({ onBack, onContinue }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF4E6' },
-  scrollContent: { paddingHorizontal: 24, paddingBottom: 40 },
-  header: { flexDirection: 'row', alignItems: 'center', marginTop: 20, marginLeft: -8 },
-  backButton: { padding: 8 },
-  title: { fontSize: 22, fontFamily: 'Brand-Bold', color: '#B22222', marginLeft: 4 },
-  subtitle: { fontSize: 14, color: '#484646', marginTop: 12, marginBottom: 24, fontFamily: 'semi-bold' },
-  infoBox:  {backgroundColor: '#E3F2FD', borderRadius: 12, padding: 16, marginBottom: 30, borderWidth: 1, borderColor: '#90CAF9' },
-  infoText: { fontSize: 14, color: '#3665CC', lineHeight: 22, fontFamily: 'Medium' },
-  form: { gap: 24, marginBottom: 32 },
+  container: { flex: 1, backgroundColor: '#FAF3E1' },
+  scrollContent: { paddingHorizontal: 24, paddingBottom: 60 },
+  headerContainer: {
+    marginTop: height * 0.08,
+    marginBottom: 20,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: -4,
+  },
+  backVector: {
+    width: 20,
+    height: 20,
+    tintColor: '#B22222',
+  },
+  title: { 
+    fontSize: 26, 
+    fontWeight: 'bold', 
+    color: '#B22222', 
+    marginLeft: 12 
+  },
+  subtitle: { 
+    fontSize: 14, 
+    color: '#6B5E5E', 
+    marginTop: 4, 
+    marginLeft: 32,
+    marginBottom: 10,
+  },
+  infoBox: {
+    backgroundColor: '#E3F2FD', 
+    borderRadius: 12, 
+    padding: 16, 
+    marginBottom: 30, 
+    borderWidth: 1, 
+    borderColor: '#90CAF9' 
+  },
+  infoText: { fontSize: 13, color: '#3665CC', lineHeight: 20 },
+  form: { gap: 20, marginBottom: 32 },
   inputGroup: { gap: 8 },
-  label: { fontSize: 13, fontFamily: 'medium', color: '#000000' },
-  unitText: { fontFamily: 'Brand-Regular', color: '#999' },
-  input: { height: 56, borderWidth: 0.5, borderColor: '#797777', borderRadius: 16, paddingHorizontal: 16, fontSize: 16, fontFamily: 'Brand-Regular' },
-  rangeText: { fontSize: 12, color: '#797777', marginTop: 4, fontFamily: 'Brand-Regular' },
-  dropdown: { height: 56, borderWidth: 0.5, borderColor: '#797777', borderRadius: 16, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  dropdownText: { fontSize: 14, color: '#484646', fontFamily: 'Brand-Regular' },
-  dropdownIcon: { fontSize: 12, color: '#6B5E5E' },
+  label: { fontSize: 14, fontWeight: '600', color: '#333' },
+  unitText: { fontWeight: '400', color: '#999' },
+  input: { 
+    height: 55, 
+    borderWidth: 1, 
+    borderColor: '#D9D9D9', 
+    borderRadius: 12, 
+    paddingHorizontal: 16, 
+    fontSize: 16, 
+    backgroundColor: '#FFF'
+  },
+  rangeText: { fontSize: 12, color: '#797777', marginTop: 2 },
+  dateRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  dropdown: { 
+    height: 55, 
+    borderWidth: 1, 
+    borderColor: '#D9D9D9', 
+    borderRadius: 12, 
+    paddingHorizontal: 12, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between',
+    backgroundColor: '#FFF'
+  },
+  dropdownText: { fontSize: 14, color: '#484646' },
+  dropdownIcon: { fontSize: 10, color: '#6B5E5E' },
   dropdownList: {
     position: 'absolute',
-    top: 60,
+    top: 58,
     left: 0,
     right: 0,
     backgroundColor: '#FFF',
@@ -183,18 +239,25 @@ const styles = StyleSheet.create({
     borderColor: '#D9D9D9',
     borderRadius: 10,
     elevation: 5,
+    maxHeight: 180,
     zIndex: 3000,
   },
   dropdownItem: { padding: 12, borderBottomWidth: 1, borderBottomColor: '#F5F5F5' },
-  dropdownItemText: { fontSize: 14, color: '#333', fontFamily: 'Brand-Medium' },
-  consentCard: { flexDirection: 'row', backgroundColor: '#FFF', padding: 20, borderRadius: 16, gap: 12, marginBottom: 32 },
-  checkbox: { width: 24, height: 24, borderRadius: 6, borderWidth: 2, borderColor: '#797777', marginTop: 2, justifyContent: 'center', alignItems: 'center' },
+  dropdownItemText: { fontSize: 14, color: '#333' },
+  consentCard: { flexDirection: 'row', gap: 12, marginBottom: 32, paddingRight: 10 },
+  checkbox: { width: 22, height: 22, borderRadius: 6, borderWidth: 2, borderColor: '#797777', marginTop: 2, justifyContent: 'center', alignItems: 'center' },
   checkboxChecked: { borderColor: '#B22222', backgroundColor: '#B22222' },
   checkInner: { width: 10, height: 10, backgroundColor: '#FFF', borderRadius: 2 },
-  consentText: { flex: 1, fontSize: 13, color: '#6B5E5E', lineHeight: 20, fontFamily: 'Brand-Regular' },
-  continueButton: { backgroundColor: '#B22222', height: 56, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
+  consentText: { flex: 1, fontSize: 13, color: '#6B5E5E', lineHeight: 18 },
+  continueButton: { 
+    backgroundColor: '#B22222', 
+    height: 55, 
+    borderRadius: 12, 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
   buttonDisabled: { backgroundColor: '#D9D9D9' },
-  continueButtonText: { color: '#FFF', fontSize: 18, fontFamily: 'Brand-Bold' },
+  continueButtonText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
 });
 
 export default HematologyBaselineScreen;

@@ -6,8 +6,11 @@ import {
   TextInput, 
   TouchableOpacity, 
   SafeAreaView,
-  Dimensions
+  Dimensions,
+  Image
 } from 'react-native';
+
+const { height } = Dimensions.get('window');
 
 const VerificationCodeScreen = ({ onBack, onVerify, onResend }) => {
   const [code, setCode] = useState(['', '', '', '']);
@@ -22,43 +25,49 @@ const VerificationCodeScreen = ({ onBack, onVerify, onResend }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>
         
-        <View style={styles.header}>
+        {/* Header Section with Drop */}
+        <View style={styles.headerContainer}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Text style={styles.backIcon}>←</Text>
+            <Image 
+              source={require('../assets/icon2/Vector.png')} 
+              style={styles.backVector} 
+              resizeMode="contain"
+            />
+            <Text style={styles.title}>Verification Code</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>Verification Code</Text>
+          <Text style={styles.subtitle}>
+            We sent a verification link to your email.
+          </Text>
         </View>
 
-        <Text style={styles.instructionText}>
-          We sent a verification link to your email. Click it to activate your account.
-        </Text>
+        <View style={styles.formSection}>
+          <View style={styles.otpContainer}>
+            <Text style={styles.label}>Enter Code</Text>
+            <View style={styles.inputRow}>
+              {code.map((digit, index) => (
+                <TextInput
+                  key={index}
+                  style={styles.otpBox}
+                  maxLength={1}
+                  keyboardType="number-pad"
+                  onChangeText={(text) => handleCodeChange(text, index)}
+                  value={digit}
+                />
+              ))}
+            </View>
+            
+            <View style={styles.resendContainer}>
+              <Text style={styles.resendText}>If you didn't receive a code. </Text>
+              <TouchableOpacity onPress={onResend}>
+                <Text style={styles.resendLink}>Resend</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
 
-        <View style={styles.otpContainer}>
-          <Text style={styles.label}>Enter Code</Text>
-          <View style={styles.inputRow}>
-            {code.map((digit, index) => (
-              <TextInput
-                key={index}
-                style={styles.otpBox}
-                maxLength={1}
-                keyboardType="number-pad"
-                onChangeText={(text) => handleCodeChange(text, index)}
-                value={digit}
-              />
-            ))}
-          </View>
-          
-          <View style={styles.resendContainer}>
-            <Text style={styles.resendText}>If you didn't receive a code. </Text>
-            <TouchableOpacity onPress={onResend}>
-              <Text style={styles.resendLink}>Resend</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={styles.sendButton} activeOpacity={0.8} onPress={onVerify}>
+            <Text style={styles.sendButtonText}>Verify</Text>
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity style={styles.sendButton} activeOpacity={0.8} onPress={onVerify}>
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
 
       </View>
     </SafeAreaView>
@@ -68,66 +77,66 @@ const VerificationCodeScreen = ({ onBack, onVerify, onResend }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF9F0',
+    backgroundColor: '#FAF3E1',
   },
   innerContainer: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 20,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 24,
-    marginLeft: -8,
+  headerContainer: {
+    marginTop: height * 0.08, // 8% Drop
+    marginBottom: 40,
   },
   backButton: {
-    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: -4,
   },
-  backIcon: {
-    fontSize: 28,
-    color: '#B32626',
+  backVector: {
+    width: 20,
+    height: 20,
+    tintColor: '#B22222',
   },
   title: {
-    fontStyle:'poppins',
-    fontSize: 20,
-    fontFamily: 'semi-Bold',
+    fontSize: 26, // Size 26
+    fontWeight: 'bold', // Bolded
     color: '#B22222',
-    marginLeft: 4,
-    lineHeight: 22,
+    marginLeft: 12,
   },
-  instructionText: {
+  subtitle: {
     fontSize: 14,
-    fontFamily: 'medium',
-    color: '#484646',
-    lineHeight: 22,
-    marginBottom: 48,
+    color: '#6B5E5E',
+    marginLeft: 32,
+    marginTop: 4,
+  },
+  formSection: {
+    flex: 1,
   },
   otpContainer: {
     marginBottom: 40,
   },
   label: {
-    fontSize: 16,
-    color: '#3D1A1A',
-    fontFamily: 'Brand-Medium',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
     marginBottom: 16,
   },
   inputRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   otpBox: {
-    width: 77,
-    height: 65,
+    width: '22%',
+    height: 55, // Standardized height
     borderWidth: 1,
-    borderColor: '#797777',
-    borderRadius: 12,
+    borderColor: '#D9D9D9',
+    borderRadius: 12, // Standardized radius
     textAlign: 'center',
-    fontSize: 24,
-    fontFamily: 'Brand-Bold',
-    color: '#3D1A1A',
-    backgroundColor: 'transparent',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    backgroundColor: '#FFF',
   },
   resendContainer: {
     flexDirection: 'row',
@@ -136,27 +145,25 @@ const styles = StyleSheet.create({
   },
   resendText: {
     fontSize: 14,
-    fontFamily: 'medium',
     color: '#797777',
   },
   resendLink: {
     fontSize: 14,
-    fontFamily: 'medium',
+    fontWeight: 'bold',
     color: '#B22222',
-    lineHeight: 20,
   },
   sendButton: {
     backgroundColor: '#B22222',
-    height: 56,
-    borderRadius: 16,
+    height: 55, // Standardized height
+    borderRadius: 12, // Standardized radius
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
   },
   sendButtonText: {
     color: '#FFFFFF',
-    fontSize: 20,
-    fontFamily: 'semi-Bold',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

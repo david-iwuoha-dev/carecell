@@ -6,29 +6,36 @@ import {
   TextInput, 
   TouchableOpacity, 
   SafeAreaView,
-  Image
+  Image,
+  Dimensions
 } from 'react-native';
+
+const { height } = Dimensions.get('window');
 
 const NewPasswordScreen = ({ onBack, onSend }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPass, setShowPass] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>
         
-        {/* Header */}
-        <View style={styles.header}>
+        {/* Header Section with Drop */}
+        <View style={styles.headerContainer}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Text style={styles.backIcon}>←</Text>
+            <Image 
+              source={require('../assets/icon2/Vector.png')} 
+              style={styles.backVector} 
+              resizeMode="contain"
+            />
+            <Text style={styles.title}>New Password</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>New Password</Text>
+          <Text style={styles.subtitle}>
+            Create a strong new password for your account.
+          </Text>
         </View>
-
-        {/* Instructions */}
-        <Text style={styles.instructionText}>
-          Create a strong new password to keep your health data safe and secure.
-        </Text>
 
         {/* Form Fields */}
         <View style={styles.form}>
@@ -39,13 +46,16 @@ const NewPasswordScreen = ({ onBack, onSend }) => {
                 style={styles.input}
                 placeholder="at least 8 characters"
                 placeholderTextColor="#999"
-                secureTextEntry={true}
+                secureTextEntry={!showPass}
                 value={password}
                 onChangeText={setPassword}
               />
-              <TouchableOpacity style={styles.iconContainer}>
+              <TouchableOpacity 
+                style={styles.iconContainer} 
+                onPress={() => setShowPass(!showPass)}
+              >
                 <Image 
-                  source={require('./assets/icon2/Frame 7.png')} 
+                  source={require('../assets/icon2/Frame 7.png')} 
                   style={styles.eyeIcon}
                 />
               </TouchableOpacity>
@@ -56,27 +66,30 @@ const NewPasswordScreen = ({ onBack, onSend }) => {
             <Text style={styles.label}>Confirm Password</Text>
             <View style={styles.passwordWrapper}>
               <TextInput
-                style={[styles.input, styles.boldPlaceholder]}
+                style={styles.input}
                 placeholder="••••••••"
-                placeholderTextColor="#3D1A1A"
-                secureTextEntry={true}
+                placeholderTextColor="#999"
+                secureTextEntry={!showConfirm}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
               />
-              <TouchableOpacity style={styles.iconContainer}>
+              <TouchableOpacity 
+                style={styles.iconContainer}
+                onPress={() => setShowConfirm(!showConfirm)}
+              >
                 <Image 
-                  source={require('./assets/icon2/Frame 7.png')} 
+                  source={require('../assets/icon2/Frame 7.png')} 
                   style={styles.eyeIcon}
                 />
               </TouchableOpacity>
             </View>
           </View>
-        </View>
 
-        {/* Action Button */}
-        <TouchableOpacity style={styles.sendButton} activeOpacity={0.8} onPress={onSend}>
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
+          {/* Action Button */}
+          <TouchableOpacity style={styles.sendButton} activeOpacity={0.8} onPress={onSend}>
+            <Text style={styles.sendButtonText}>Update Password</Text>
+          </TouchableOpacity>
+        </View>
 
       </View>
     </SafeAreaView>
@@ -86,97 +99,85 @@ const NewPasswordScreen = ({ onBack, onSend }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF9F0',
+    backgroundColor: '#FAF3E1',
   },
   innerContainer: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 20,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 24,
-    marginLeft: -8,
+  headerContainer: {
+    marginTop: height * 0.08, // 8% Drop
+    marginBottom: 30,
   },
   backButton: {
-    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: -4,
   },
-  backIcon: {
-    fontSize: 28,
-    color: '#B22222',
+  backVector: {
+    width: 20,
+    height: 20,
+    tintColor: '#B22222',
   },
   title: {
-    fontSize: 20,
-    fontFamily: 'semi-Bold',
+    fontSize: 26, // Updated to 26
+    fontWeight: 'bold', // Bolded
     color: '#B22222',
-    marginLeft: 4,
+    marginLeft: 12,
   },
-  instructionText: {
+  subtitle: {
     fontSize: 14,
-    fontFamily: 'semi-Bold',
     color: '#6B5E5E',
-    lineHeight: 20,
-    marginBottom: 20,
+    marginLeft: 32,
+    marginTop: 4,
   },
   form: {
-    gap: 24,
-    marginBottom: 48,
+    gap: 20,
   },
   inputGroup: {
-    gap: 12,
+    gap: 8,
   },
   label: {
-    fontSize: 16,
-    color: '#1E1E1E',
-    fontFamily: 'semi-bold',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
   },
   passwordWrapper: {
-    width: 378,
-    height: 65,
+    height: 55, // Standardized 55
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#797777',
-    borderRadius: 12,
+    borderColor: '#D9D9D9',
+    borderRadius: 12, // Standardized 12
     paddingHorizontal: 16,
-    backgroundColor: 'transparent',
-    alignSelf: 'center',
+    backgroundColor: '#FFF',
   },
   input: {
     flex: 1,
     fontSize: 15,
-    fontFamily: 'medium',
-    color: '#484646',
-  },
-  boldPlaceholder: {
-    fontFamily: 'Brand-Bold',
-    fontSize: 18,
+    color: '#333',
   },
   iconContainer: {
     padding: 4,
   },
   eyeIcon: {
-    width: 21.67,
-    height: 17,
+    width: 22,
+    height: 18,
     tintColor: '#6B5E5E',
+    resizeMode: 'contain',
   },
   sendButton: {
-    backgroundColor: '#B32626',
-    height: 56,
-    borderRadius: 16,
+    backgroundColor: '#B22222',
+    height: 55, // Standardized 55
+    borderRadius: 12, // Standardized 12
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#B32626',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    marginTop: 10,
   },
   sendButtonText: {
     color: '#FFFFFF',
-    fontSize: 18,
-    fontFamily: 'Brand-Bold',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

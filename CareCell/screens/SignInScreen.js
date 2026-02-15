@@ -8,89 +8,110 @@ import {
   SafeAreaView, 
   KeyboardAvoidingView, 
   Platform,
-  Image
+  Image,
+  Dimensions,
+  ScrollView
 } from 'react-native';
 
-const SignInScreen = ({ onSignIn, onRegister, onForgotPassword }) => {
+const { height } = Dimensions.get('window');
+
+const SignInScreen = ({ onBack, onSignIn, onRegister, onForgotPassword }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPass, setShowPass] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-        style={styles.innerContainer}
+        style={{ flex: 1 }}
       >
-        
-        <View style={styles.header}>
-          <Text style={styles.welcomeText}>Welcome back!</Text>
-          <Text style={styles.subText}>Sign in to continue your health journey</Text>
-        </View>
-
-        <View style={styles.form}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email address</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="youremail@example.com"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          
+          {/* Header Section */}
+          <View style={styles.headerContainer}>
+            <TouchableOpacity style={styles.backButton} onPress={onBack}>
+              <Image 
+                source={require('../assets/icon2/Vector.png')} 
+                style={styles.backVector} 
+                resizeMode="contain"
+              />
+              <Text style={styles.title}>Welcome back!</Text>
+            </TouchableOpacity>
+            <Text style={styles.subtitle}>Sign in to continue your health journey</Text>
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Password</Text>
-            <View style={styles.passwordContainer}>
+          {/* Form Fields */}
+          <View style={styles.form}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Email address</Text>
               <TextInput
-                style={styles.passwordInput}
-                placeholder="Enter your password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
+                style={styles.input}
+                placeholder="youremail@example.com"
+                placeholderTextColor="#999"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
               />
-              <TouchableOpacity>
-                <Image 
-                  source={require('./assets/icon2/Frame 7.png')} 
-                  style={styles.eyeIcon}
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Password</Text>
+              <View style={styles.passwordWrapper}>
+                <TextInput
+                  style={styles.passwordInput}
+                  placeholder="Enter your password"
+                  placeholderTextColor="#999"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPass}
                 />
+                <TouchableOpacity onPress={() => setShowPass(!showPass)}>
+                  <Image 
+                    source={require('../assets/icon2/Frame 7.png')} 
+                    style={styles.eyeIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity style={styles.forgotContainer} onPress={onForgotPassword}>
+                <Text style={styles.forgotText}>Forgot Password?</Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.forgotContainer} onPress={onForgotPassword}>
-              <Text style={styles.forgotText}>Forgot Password?</Text>
-            </TouchableOpacity>
           </View>
-        </View>
 
-        <View style={styles.dividerContainer}>
-          <View style={styles.line} />
-          <Text style={styles.orText}>or</Text>
-          <View style={styles.line} />
-        </View>
+          {/* Divider */}
+          <View style={styles.dividerContainer}>
+            <View style={styles.line} />
+            <Text style={styles.orText}>or</Text>
+            <View style={styles.line} />
+          </View>
 
-        <TouchableOpacity style={styles.googleButton}>
-          <Image 
-            source={require('./assets/icon2/googleicon.png')} 
-            style={styles.googleIcon}
-          />
-          <Text style={styles.googleButtonText}>Continue with Google</Text>
-        </TouchableOpacity>
-
-        {/* Action Footer */}
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.signInButton} onPress={onSignIn}>
-            <Text style={styles.signInButtonText}>Sign In</Text>
+          {/* Google Button */}
+          <TouchableOpacity style={styles.googleButton} activeOpacity={0.8}>
+            <Image 
+              source={require('../assets/icon2/googleicon.png')} 
+              style={styles.googleIcon}
+            />
+            <Text style={styles.googleButtonText}>Continue with Google</Text>
           </TouchableOpacity>
 
-          <View style={styles.registerContainer}>
-            <Text style={styles.noAccountText}>Don't have an account? </Text>
-            <TouchableOpacity onPress={onRegister}>
-              <Text style={styles.registerText}>Register</Text>
+          {/* Action Footer */}
+          <View style={styles.footer}>
+            <TouchableOpacity style={styles.signInButton} activeOpacity={0.8} onPress={onSignIn}>
+              <Text style={styles.signInButtonText}>Sign In</Text>
             </TouchableOpacity>
+            
+            {/* REGISTER LINK - This leads to CreateAccountScreen */}
+            <View style={styles.registerContainer}>
+              <Text style={styles.noAccountText}>Don't have an account? </Text>
+              <TouchableOpacity onPress={onRegister}>
+                <Text style={styles.registerText}>Register</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
 
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -99,26 +120,37 @@ const SignInScreen = ({ onSignIn, onRegister, onForgotPassword }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF4E6',
+    backgroundColor: '#FAF3E1',
   },
-  innerContainer: {
-    flex: 1,
+  scrollContent: {
     paddingHorizontal: 24,
+    paddingBottom: 40,
   },
-  header: {
-    marginTop: 40,
+  headerContainer: {
+    marginTop: height * 0.08, 
     marginBottom: 32,
   },
-  welcomeText: {
-    fontSize: 28,
-    fontFamily: 'Brand-Bold',
-    color: '#B32626',
-    marginBottom: 8,
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: -4,
   },
-  subText: {
-    fontSize: 14,
-    fontFamily: 'Brand-Regular',
-    color: '#6B5E5E',
+  backVector: {
+    width: 20,
+    height: 20,
+    tintColor: '#B22222',
+  },
+  title: {
+    fontSize: 26, 
+    fontWeight: 'bold', 
+    color: '#B22222', 
+    marginLeft: 12,
+  },
+  subtitle: {
+    fontSize: 14, 
+    color: '#6B5E5E', 
+    marginLeft: 32,
+    marginTop: 4,
   },
   form: {
     gap: 20,
@@ -128,53 +160,49 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#3D1A1A',
-    fontFamily: 'Brand-Medium',
+    fontWeight: '600',
+    color: '#333',
   },
   input: {
-    width: 378,
-    height: 65,
-    backgroundColor: 'transparent',
+    height: 55, 
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#797777',
+    borderColor: '#D9D9D9',
     borderRadius: 12,
     paddingHorizontal: 16,
-    fontSize: 14,
-    fontFamily: 'medium',
-    alignSelf: 'center',
-    color: '#484646',
+    fontSize: 15,
+    color: '#333',
   },
-  passwordContainer: {
-    width: 378,
-    height: 65,
+  passwordWrapper: {
+    height: 55,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#797777',
+    borderColor: '#D9D9D9',
     borderRadius: 12,
     paddingHorizontal: 16,
-    alignSelf: 'center',
   },
   passwordInput: {
     flex: 1,
-    paddingVertical: 16,
-    fontSize: 14,
-    fontFamily: 'medium',
-    color: '#484646',
+    height: '100%',
+    fontSize: 15,
+    color: '#333',
   },
   eyeIcon: {
-    width: 21.67,
-    height: 17,
+    width: 22,
+    height: 18,
     tintColor: '#6B5E5E',
+    resizeMode: 'contain',
   },
   forgotContainer: {
     alignSelf: 'flex-end',
     marginTop: 4,
   },
   forgotText: {
-    color: '#B32626',
+    color: '#B22222',
     fontSize: 14,
-    fontFamily: 'Medium',
+    fontWeight: 'bold',
   },
   dividerContainer: {
     flexDirection: 'row',
@@ -184,65 +212,63 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: 1,
-    backgroundColor: '#1E1E1E',
+    backgroundColor: '#D9D9D9',
   },
   orText: {
-    marginHorizontal: 10,
-    color: '#1E1E1E',
+    marginHorizontal: 12,
+    color: '#6B5E5E',
     fontSize: 14,
-    fontFamily: 'Brand-Regular',
   },
   googleButton: {
-    width: 378,
-    height: 65,
+    height: 55,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ffffff',
-    borderRadius: 16,
+    borderRadius: 12,
     backgroundColor: '#FFFFFF',
-    gap: 8,
-    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    gap: 10,
   },
   googleIcon: {
-    width: 23.16,
-    height: 23.99,
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
   },
   googleButtonText: {
-    fontSize: 14,
-    fontFamily: 'Medium',
+    fontSize: 15,
+    fontWeight: '600',
     color: '#1E1E1E',
   },
   footer: {
-    marginTop: 40,
-    marginBottom: 20,
-    gap: 16,
+    marginTop: 30,
+    gap: 20,
   },
   signInButton: {
-    backgroundColor: '#B32626',
-    paddingVertical: 18,
-    borderRadius: 16,
+    backgroundColor: '#B22222',
+    height: 55,
+    borderRadius: 12,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   signInButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontFamily: 'Brand-Bold',
+    fontWeight: 'bold',
   },
   registerContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    paddingBottom: 20,
   },
   noAccountText: {
     color: '#6B5E5E',
-    fontSize: 13,
-    fontFamily: 'Brand-Regular',
+    fontSize: 14,
   },
   registerText: {
-    color: '#B32626',
-    fontSize: 13,
-    fontFamily: 'Brand-Bold',
+    color: '#B22222',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 

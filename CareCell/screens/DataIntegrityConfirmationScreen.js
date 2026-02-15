@@ -33,7 +33,7 @@ const DataIntegrityConfirmationScreen = ({ onContinue }) => {
           
           <View style={styles.iconContainer}>
             <Image 
-              source={require('./assets/icon/successicon.png')} 
+              source={require('../assets/icon/successicon.png')} 
               style={styles.successImage} 
             />
           </View>

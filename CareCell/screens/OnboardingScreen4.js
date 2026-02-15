@@ -1,31 +1,27 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const OnboardingScreen4 = ({ onCreateAccount, onSignIn }) => {
   return (
     <SafeAreaView style={styles.container}>
-      
       {/* Hero Image */}
       <Image 
-        source={require('./assets/onboarding4image.png')} 
+        source={require('../assets/onboarding4image.webp')} 
         style={styles.image}
       />
 
       {/* Content Section */}
       <View style={styles.contentContainer}>
         <View>
-          <Text style={styles.title}>
-            You're Not Alone — Care, Support & Community
-          </Text>
-          
+          <Text style={styles.title}>You're Not Alone — Care, Support & Community</Text>
           <Text style={styles.description}>
             Get simple tips, emotional support, and trustworthy information built for real African experiences.
           </Text>
         </View>
 
-        {/* Action Buttons */}
+        {/* Action Buttons - Standardized height: 55, radius: 12 */}
         <View style={styles.buttonGroup}>
           <TouchableOpacity style={styles.primaryButton} activeOpacity={0.8} onPress={onCreateAccount}>
             <Text style={styles.primaryButtonText}>Create Account</Text>
@@ -36,7 +32,6 @@ const OnboardingScreen4 = ({ onCreateAccount, onSignIn }) => {
           </TouchableOpacity>
         </View>
       </View>
-
     </SafeAreaView>
   );
 };
@@ -45,8 +40,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF4E6',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   image: {
     width: '100%',
@@ -58,7 +51,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 28,
     paddingTop: 32,
-    paddingBottom: 40,
+    paddingBottom: 60, // Fixed padding for navigation buttons
     justifyContent: 'space-between',
   },
   title: {
@@ -79,8 +72,9 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     backgroundColor: '#B32626',
-    paddingVertical: 18,
-    borderRadius: 16,
+    height: 55,           // Standardized height
+    borderRadius: 12,     // Standardized radius
+    justifyContent: 'center',
     alignItems: 'center',
   },
   primaryButtonText: {
@@ -90,8 +84,9 @@ const styles = StyleSheet.create({
   },
   outlineButton: {
     backgroundColor: '#FFFFFF',
-    paddingVertical: 18,
-    borderRadius: 16,
+    height: 55,           // Standardized height
+    borderRadius: 12,     // Standardized radius
+    justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1.5,
     borderColor: '#B32626',

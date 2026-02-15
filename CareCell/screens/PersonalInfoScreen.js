@@ -1,39 +1,25 @@
 import React, { useState } from 'react';
 import { 
-  StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView, KeyboardAvoidingView, Platform 
+  StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, 
+  SafeAreaView, KeyboardAvoidingView, Platform, Dimensions 
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+
+const { height } = Dimensions.get('window');
 
 const PersonalInfoScreen = ({ onBack, onContinue, accountType }) => {
   const isChild = accountType === 'child';
 
-  // Adult Form State
+  // Adult Form State (Restored)
   const [adultForm, setAdultForm] = useState({
-    fullName: '',
-    age: '',
-    gender: '',
-    maritalStatus: '',
-    phone: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    region: '',
-    complications: ''
+    fullName: '', age: '', gender: '', maritalStatus: '', phone: '',
+    email: '', password: '', confirmPassword: '', region: '', complications: ''
   });
 
-  // Child Form State
+  // Child Form State (Restored)
   const [childForm, setChildForm] = useState({
-    childName: '',
-    displayName: '',
-    childAge: '',
-    childGender: '',
-    parentName: '',
-    phone: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    region: '',
-    complications: ''
+    childName: '', displayName: '', childAge: '', childGender: '', parentName: '',
+    phone: '', email: '', password: '', confirmPassword: '', region: '', complications: ''
   });
 
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -51,6 +37,17 @@ const PersonalInfoScreen = ({ onBack, onContinue, accountType }) => {
     setActiveDropdown(null);
   };
 
+  // Shared Header Component to ensure consistency
+  const renderHeader = (title, sub) => (
+    <View style={styles.headerContainer}>
+      <TouchableOpacity style={styles.backHeader} onPress={onBack}>
+        <Feather name="chevron-left" size={28} color="#B22222" />
+        <Text style={styles.headerTitle}>{title}</Text>
+      </TouchableOpacity>
+      <Text style={styles.subText}>{sub}</Text>
+    </View>
+  );
+
   // Render Adult Form
   if (!isChild) {
     return (
@@ -61,12 +58,7 @@ const PersonalInfoScreen = ({ onBack, onContinue, accountType }) => {
         >
           <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
             
-            <TouchableOpacity style={styles.backHeader} onPress={onBack}>
-              <Feather name="chevron-left" size={28} color="#B22222" />
-              <Text style={styles.headerTitle}>Personal Information</Text>
-            </TouchableOpacity>
-
-            <Text style={styles.subText}>Tell us about yourself</Text>
+            {renderHeader("Personal Information", "Tell us about yourself")}
 
             <View style={styles.card}>
               <Text style={styles.cardHeader}>Personal Details</Text>
@@ -193,7 +185,7 @@ const PersonalInfoScreen = ({ onBack, onContinue, accountType }) => {
     );
   }
 
-  // Render Child Form (using provided code structure)
+  // Render Child Form
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView 
@@ -202,12 +194,7 @@ const PersonalInfoScreen = ({ onBack, onContinue, accountType }) => {
       >
         <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
           
-          <TouchableOpacity style={styles.backHeader} onPress={onBack}>
-            <Feather name="chevron-left" size={28} color="#B22222" />
-            <Text style={styles.headerTitle}>Personal Information</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.subText}>Tell us about your child and yourself</Text>
+          {renderHeader("Personal Information", "Tell us about your child and yourself")}
 
           <View style={styles.card}>
             <Text style={styles.cardHeader}>Child's Information</Text>
@@ -355,40 +342,41 @@ const PersonalInfoScreen = ({ onBack, onContinue, accountType }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAF3E1', // Cream background color from design
+    backgroundColor: '#FAF3E1',
   },
   scrollContainer: {
     paddingHorizontal: 20,
     paddingBottom: 40,
   },
+  headerContainer: {
+    marginTop: height * 0.08, // Same vertical drop as Sign In screen
+    marginBottom: 20,
+  },
   backHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 4,
   },
   headerTitle: {
-    fontSize: 22,
+    fontSize: 26, // Matched size for prominence
     fontWeight: 'bold',
-    color: '#B22222', // Deep red theme
+    color: '#B22222',
     marginLeft: 10,
   },
   subText: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 20,
-    marginLeft: 34,
+    marginLeft: 38, // Aligned with the title text, past the icon
   },
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
-    // iOS Shadow
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    // Android Shadow
     elevation: 3,
   },
   cardHeader: {
@@ -421,10 +409,9 @@ const styles = StyleSheet.create({
     borderColor: '#E0E0E0',
     borderRadius: 12,
     backgroundColor: '#FFF',
-    justifyContent: 'center',
-    padding: 14, // Added padding to match input height
-    flexDirection: 'row', // Added for custom dropdown
-    justifyContent: 'space-between', // Added for custom dropdown
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 14,
     alignItems: 'center',
   },
   dropdownList: {
@@ -438,10 +425,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     zIndex: 3000,
     elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
   dropdownItem: {
     padding: 15,
@@ -462,7 +445,8 @@ const styles = StyleSheet.create({
   primaryButton: {
     backgroundColor: '#B22222',
     borderRadius: 12,
-    paddingVertical: 18,
+    height: 55, // Applying requested button size
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
   },

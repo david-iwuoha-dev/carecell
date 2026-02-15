@@ -1,41 +1,59 @@
-import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, Dimensions, Animated } from 'react-native';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const OnboardingScreen = ({ onFinish }) => {
+  // Animation value for sliding
+  const slideAnim = useRef(new Animated.Value(width)).current; // Start at right edge
+
+  useEffect(() => {
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* 1. Header Image Section */}
-      <View style={styles.imageContainer}>
-        <Image 
-          source={require('./assets/onboarding1image.png')} 
-          style={styles.heroImage}
-        />
-      </View>
-
-      {/* 2. Content Section */}
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>
-          Your genes,{"\n"}your journey,{"\n"}your daily companion.
-        </Text>
+      <Animated.View style={[styles.mainWrapper, { transform: [{ translateX: slideAnim }] }]}>
         
-        <Text style={styles.description}>
-          Africa's first genomics-powered digital health platform designed specifically for people living with Sickle Cell Disease.
-        </Text>
-
-        {/* 3. Features List */}
-        <View style={styles.features}>
-          <FeatureItem iconSource={require('./assets/icon/icon-insight.png')} iconSize={{width: 32, height: 35}} text="Personalized genomic insights" />
-          <FeatureItem iconSource={require('./assets/icon/icon-health.png')} iconSize={{width: 40, height: 33}} text="Daily health tracking & support" />
-          <FeatureItem iconSource={require('./assets/icon/icon-community.png')} iconSize={{width: 38, height: 38}} text="Built for African communities" />
+        {/* 1. Header Image Section */}
+        <View style={styles.imageContainer}>
+          <Image 
+            source={require('../assets/onboarding1image.png')} 
+            style={styles.heroImage}
+          />
         </View>
 
-        {/* 4. Button */}
-        <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={onFinish}>
-          <Text style={styles.buttonText}>Get Started</Text>
-        </TouchableOpacity>
-      </View>
+        {/* 2. Content Section */}
+        <View style={styles.contentContainer}>
+          <View>
+            <Text style={styles.title}>
+              Your genes,{"\n"}your journey,{"\n"}your daily companion.
+            </Text>
+            
+            <Text style={styles.description}>
+              Africa's first genomics-powered digital health platform designed specifically for people living with Sickle Cell Disease.
+            </Text>
+
+            {/* 3. Features List */}
+            <View style={styles.features}>
+              <FeatureItem iconSource={require('../assets/icon/icon-insight.png')} iconSize={{width: 32, height: 35}} text="Personalized genomic insights" />
+              <FeatureItem iconSource={require('../assets/icon/icon-health.png')} iconSize={{width: 40, height: 33}} text="Daily health tracking & support" />
+              <FeatureItem iconSource={require('../assets/icon/icon-community.png')} iconSize={{width: 38, height: 38}} text="Built for African communities" />
+            </View>
+          </View>
+
+          {/* 4. Button - Now wrapped in a View to protect its bottom margin */}
+          <View style={styles.buttonWrapper}>
+            <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={onFinish}>
+              <Text style={styles.buttonText}>Get Started</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Animated.View>
     </SafeAreaView>
   );
 };
@@ -54,52 +72,55 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF9F1',
   },
+  mainWrapper: {
+    flex: 1,
+  },
   imageContainer: {
-    height: '40%',
+    height: height * 0.35, // Responsive height (35% of screen)
     backgroundColor: '#B22222',
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+    overflow: 'hidden'
   },
   heroImage: {
-    width: 450,
-    height: 520,
+    width: '90%', // Don't use 450px, use percentage
+    height: '90%',
     resizeMode: 'contain',
   },
   contentContainer: {
     flex: 1,
     paddingHorizontal: 30,
-    paddingTop: 30,
+    paddingTop: 25,
     justifyContent: 'space-between',
-    paddingBottom: 40,
+    paddingBottom: 50, // This creates the gap for your nav buttons
   },
   title: {
     fontFamily: 'Brand-Bold',
-    fontSize: 28,
+    fontSize: 26,
     color: '#1E1E1E',
-    lineHeight: 36,
+    lineHeight: 34,
   },
   description: {
     fontFamily: 'Brand-Medium',
     fontSize: 14,
-    lineHeight: 25,
-    letterSpacing: 0,
+    lineHeight: 22,
     color: '#4A4A4A',
-    marginTop: 15,
+    marginTop: 10,
   },
   features: {
-    marginVertical: 20,
+    marginTop: 20,
   },
   featureItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 12,
   },
   iconCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: '#FFF',
     justifyContent: 'center',
     alignItems: 'center',
@@ -117,6 +138,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 15,
     color: '#333',
+    flex: 1, // Allows text to wrap if it's too long
+  },
+  buttonWrapper: {
+    width: '100%',
+    marginTop: 10,
   },
   button: {
     backgroundColor: '#B22222',

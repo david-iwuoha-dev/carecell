@@ -4,8 +4,12 @@ import {
   View, 
   Text, 
   TouchableOpacity, 
-  SafeAreaView 
+  SafeAreaView,
+  Image,
+  Dimensions
 } from 'react-native';
+
+const { height } = Dimensions.get('window');
 
 const GenotypeScreen = ({ onBack, onContinue }) => {
   const [selectedGenotype, setSelectedGenotype] = useState(null);
@@ -20,15 +24,18 @@ const GenotypeScreen = ({ onBack, onContinue }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>
         
-        {/* Header */}
-        <View style={styles.header}>
+        {/* Header Section with Drop */}
+        <View style={styles.headerContainer}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Text style={styles.backIcon}>←</Text>
+            <Image 
+              source={require('../assets/icon2/Vector.png')} 
+              style={styles.backVector} 
+              resizeMode="contain"
+            />
+            <Text style={styles.title}>Genotype Information</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>Genotype Information</Text>
+          <Text style={styles.subtitle}>Select genotype</Text>
         </View>
-
-        <Text style={styles.subtitle}>Select genotype</Text>
 
         {/* Genotype List */}
         <View style={styles.listContainer}>
@@ -79,37 +86,37 @@ const GenotypeScreen = ({ onBack, onContinue }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF4E6',
+    backgroundColor: '#FAF3E1', // Matched background to Personal Info screen
   },
   innerContainer: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 20,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    marginLeft: -8,
+  headerContainer: {
+    marginTop: height * 0.08, // Standard header drop
+    marginBottom: 24,
   },
   backButton: {
-    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: -4,
   },
-  backIcon: {
-    fontSize: 28,
-    color: '#B22222',
+  backVector: {
+    width: 17,
+    height: 17,
+    tintColor: '#B22222',
   },
   title: {
-    fontSize: 24,
-    fontFamily: 'Brand-Bold',
+    fontSize: 26, // Updated to 26
+    fontWeight: 'bold', // Updated to bold
     color: '#B22222',
-    marginLeft: 4,
+    marginLeft: 12,
   },
   subtitle: {
     fontSize: 16,
-    color: '#3D1A1A',
-    fontFamily: 'Brand-Medium',
-    marginBottom: 24,
+    color: '#666',
+    marginLeft: 29, // Aligned under the text, past the icon
+    marginTop: 4,
   },
   listContainer: {
     gap: 16,
@@ -121,11 +128,18 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#D9D9D9',
+    borderColor: '#E0E0E0',
     justifyContent: 'space-between',
+    // Shadow for consistency with cards
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   selectedCard: {
     borderColor: '#B22222',
+    backgroundColor: '#FFF9F9',
   },
   textContainer: {
     flex: 1,
@@ -133,14 +147,13 @@ const styles = StyleSheet.create({
   },
   optionTitle: {
     fontSize: 16,
-    fontFamily: 'medium',
+    fontWeight: '600',
     color: '#000000',
     marginBottom: 4,
   },
   optionDescription: {
     fontSize: 14,
     color: '#797777',
-    fontFamily: 'Medium',
     lineHeight: 20,
   },
   radioOuter: {
@@ -162,17 +175,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#B22222',
   },
   continueButton: {
-    height: 56,
-    borderRadius: 16,
+    height: 55, // Standard height
+    borderRadius: 12, // Standard radius
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 'auto',
-    marginBottom: 30,
+    marginBottom: 80,
   },
   continueButtonText: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontFamily: 'Brand-Bold',
+    fontWeight: 'bold',
   },
 });
 

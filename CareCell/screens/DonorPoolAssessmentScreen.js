@@ -7,7 +7,10 @@ import {
   SafeAreaView, 
   ScrollView,
   Image,
+  Dimensions
 } from 'react-native';
+
+const { height } = Dimensions.get('window');
 
 const DonorPoolAssessmentScreen = ({ onBack, onSkip, onSubmit }) => {
   const [siblings, setSiblings] = useState([]);
@@ -32,6 +35,7 @@ const DonorPoolAssessmentScreen = ({ onBack, onSkip, onSubmit }) => {
   const removeSibling = (id) => {
     setSiblings(siblings.filter(s => s.id !== id));
   };
+  
   const updateSiblingGenotype = (id, value) => {
     setSiblings(siblings.map(s => s.id === id ? { ...s, genotype: value } : s));
     setActiveDropdown(null);
@@ -52,19 +56,23 @@ const DonorPoolAssessmentScreen = ({ onBack, onSkip, onSubmit }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
+        {/* Header Section with Drop */}
+        <View style={styles.headerContainer}>
+          <View style={styles.headerTopRow}>
             <TouchableOpacity style={styles.backButton} onPress={onBack}>
-              <Text style={styles.backIcon}>←</Text>
+              <Image 
+                source={require('../assets/icon2/Vector.png')} 
+                style={styles.backVector} 
+                resizeMode="contain"
+              />
+              <Text style={styles.title}>Donor Pool Assessment</Text>
             </TouchableOpacity>
-            <Text style={styles.title}>Donor Pool Assessment</Text>
+            <TouchableOpacity onPress={onSkip} style={styles.skipButton}>
+              <Text style={styles.skipText}>Skip</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={onSkip}>
-            <Text style={styles.skipText}>Skip</Text>
-          </TouchableOpacity>
+          <Text style={styles.subtitle}>Provide family genotype information for transplant eligibility</Text>
         </View>
-
-        <Text style={styles.subtitle}>Provide family genotype information for transplant eligibility</Text>
 
         {/* Card 1: Parental Genotypes */}
         <View style={[styles.card, { zIndex: (activeDropdown === 'mother' || activeDropdown === 'father') ? 2000 : 1 }]}>
@@ -124,7 +132,7 @@ const DonorPoolAssessmentScreen = ({ onBack, onSkip, onSubmit }) => {
                   <Text style={styles.siblingLabel}>Sibling {index + 1}</Text>
                   <TouchableOpacity onPress={() => removeSibling(sibling.id)}>
                     <Image 
-                      source={require('./assets/icon/dustbin.png')} 
+                      source={require('../assets/icon/dustbin.png')} 
                       style={styles.trashIcon} 
                     />
                   </TouchableOpacity>
@@ -150,8 +158,6 @@ const DonorPoolAssessmentScreen = ({ onBack, onSkip, onSubmit }) => {
                 <View style={[styles.inputGroup, { zIndex: (activeDropdown && activeDropdown.startsWith(`sibling-${sibling.id}-dob`)) ? 2000 : 1 }]}>
                   <Text style={styles.label}>Date of Birth</Text>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    
-                    {/* Day Dropdown */}
                     <View style={{ width: '28%' }}>
                       <TouchableOpacity style={styles.dropdown} onPress={() => toggleDropdown(`sibling-${sibling.id}-dob-day`)}>
                         <Text style={styles.dropdownText}>{sibling.dobDay}</Text>
@@ -168,7 +174,6 @@ const DonorPoolAssessmentScreen = ({ onBack, onSkip, onSubmit }) => {
                       )}
                     </View>
 
-                    {/* Month Dropdown */}
                     <View style={{ width: '34%' }}>
                       <TouchableOpacity style={styles.dropdown} onPress={() => toggleDropdown(`sibling-${sibling.id}-dob-month`)}>
                         <Text style={styles.dropdownText}>{sibling.dobMonth}</Text>
@@ -185,7 +190,6 @@ const DonorPoolAssessmentScreen = ({ onBack, onSkip, onSubmit }) => {
                       )}
                     </View>
 
-                    {/* Year Dropdown */}
                     <View style={{ width: '32%' }}>
                       <TouchableOpacity style={styles.dropdown} onPress={() => toggleDropdown(`sibling-${sibling.id}-dob-year`)}>
                         <Text style={styles.dropdownText}>{sibling.dobYear}</Text>
@@ -201,7 +205,6 @@ const DonorPoolAssessmentScreen = ({ onBack, onSkip, onSubmit }) => {
                         </ScrollView>
                       )}
                     </View>
-
                   </View>
                 </View>
               </View>
@@ -226,6 +229,7 @@ const DonorPoolAssessmentScreen = ({ onBack, onSkip, onSubmit }) => {
             ))}
           </View>
         </View>
+
         <TouchableOpacity style={styles.submitButton} activeOpacity={0.8} onPress={onSubmit}>
           <Text style={styles.submitButtonText}>Submit Donor Pre-Screening</Text>
         </TouchableOpacity>
@@ -236,33 +240,60 @@ const DonorPoolAssessmentScreen = ({ onBack, onSkip, onSubmit }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF9F0' },
-  scrollContent: { paddingHorizontal: 20, paddingBottom: 40 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', marginLeft: -8 },
-  backButton: { padding: 8 },
-  backIcon: { fontSize: 28, color: '#B22222' },
-  skipText: { fontSize: 16, fontFamily: 'Brand-Medium', color: '#B22222' },
-  title: { fontSize: 22, fontFamily: 'Brand-Bold', color: '#B22222', marginLeft: 4 },
-  subtitle: { fontSize: 13, color: '#6B5E5E', marginTop: 8, marginBottom: 20, fontFamily: 'Brand-Medium' },
+  container: { flex: 1, backgroundColor: '#FAF3E1' },
+  scrollContent: { paddingHorizontal: 20, paddingBottom: 60 },
+  headerContainer: {
+    marginTop: height * 0.08,
+    marginBottom: 20,
+  },
+  headerTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: -4,
+  },
+  backVector: {
+    width: 17,
+    height: 17,
+    tintColor: '#B22222',
+  },
+  title: { 
+    fontSize: 26, 
+    fontWeight: 'bold', 
+    color: '#B22222', 
+    marginLeft: 12 
+  },
+  skipButton: {
+    padding: 4,
+  },
+  skipText: { 
+    fontSize: 14, // Smaller skip
+    color: '#B22222',
+    opacity: 0.8,
+  },
+  subtitle: { 
+    fontSize: 13, 
+    color: '#6B5E5E', 
+    marginTop: 4, 
+    marginLeft: 25,
+  },
   card: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 20, marginBottom: 20, elevation: 2 },
-  cardHeader: { fontSize: 15, fontFamily: 'Brand-Bold', color: '#333', marginBottom: 15 },
+  cardHeader: { fontSize: 15, fontWeight: 'bold', color: '#333', marginBottom: 15 },
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   addBtn: { flexDirection: 'row', alignItems: 'center' },
   addIcon: { fontSize: 18, color: '#B22222', marginRight: 4 },
-  addText: { color: '#B22222', fontFamily: 'Brand-Bold', fontSize: 14 },
+  addText: { color: '#B22222', fontWeight: 'bold', fontSize: 14 },
   siblingBox: { borderWidth: 1, borderColor: '#EDEDED', borderRadius: 12, padding: 15, marginBottom: 15 },
-  siblingLabel: { fontSize: 14, color: '#999', marginBottom: 10, fontFamily: 'Brand-Medium' },
-  trashIcon: { 
-    width: 20, 
-    height: 20, 
-    tintColor: '#B22222',
-    resizeMode: 'contain'
-  },
+  siblingLabel: { fontSize: 14, color: '#999', marginBottom: 10 },
+  trashIcon: { width: 20, height: 20, tintColor: '#B22222', resizeMode: 'contain' },
   inputGroup: { marginBottom: 12 },
-  label: { fontSize: 14, color: '#333', marginBottom: 6, fontFamily: 'Brand-Medium' },
+  label: { fontSize: 14, color: '#333', marginBottom: 6 },
   dropdown: { height: 48, borderWidth: 1, borderColor: '#D9D9D9', borderRadius: 10, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  dropdownText: { fontSize: 14, color: '#999', fontFamily: 'Brand-Regular' },
+  dropdownText: { fontSize: 14, color: '#999' },
   dropdownIcon: { fontSize: 14, color: '#6B5E5E' },
   dropdownList: {
     position: 'absolute',
@@ -280,20 +311,23 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   dropdownItem: { padding: 12, borderBottomWidth: 1, borderBottomColor: '#F5F5F5' },
-  dropdownItemText: { fontSize: 14, color: '#333', fontFamily: 'Brand-Medium' },
-  calendarIcon: { 
-    width: 20, 
-    height: 20,
-    resizeMode: 'contain'
-  },
-  emptyText: { textAlign: 'center', color: '#999', marginVertical: 20, fontFamily: 'Brand-Regular' },
+  dropdownItemText: { fontSize: 14, color: '#333' },
+  emptyText: { textAlign: 'center', color: '#999', marginVertical: 20 },
   bloodGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   bloodItem: { width: '22%', height: 45, borderWidth: 1, borderColor: '#D9D9D9', borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
   bloodItemSelected: { backgroundColor: '#B22222', borderColor: '#B22222' },
-  bloodText: { fontSize: 15, color: '#333', fontFamily: 'Brand-Medium' },
-  bloodTextSelected: { color: '#FFF', fontFamily: 'Brand-Bold' },
-  submitButton: { backgroundColor: '#B22222', height: 56, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginTop: 10 },
-  submitButtonText: { color: '#FFFFFF', fontSize: 16, fontFamily: 'Brand-Bold' },
+  bloodText: { fontSize: 15, color: '#333' },
+  bloodTextSelected: { color: '#FFF', fontWeight: 'bold' },
+  submitButton: { 
+    backgroundColor: '#B22222', 
+    height: 55, // Consistent height
+    borderRadius: 12, // Consistent radius
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    marginTop: 10,
+    marginBottom: 40, // Space to clear nav bar
+  },
+  submitButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' },
 });
 
 export default DonorPoolAssessmentScreen;

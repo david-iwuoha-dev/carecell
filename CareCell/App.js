@@ -3,7 +3,7 @@ import * as Font from 'expo-font';
 import { Text, View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-// Screens (all inside screens/ folder now)
+// Screens
 import SplashScreen from './screens/SplashScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
 import OnboardingScreen2 from './screens/OnboardingScreen2';
@@ -17,11 +17,13 @@ import SuccessScreen from './screens/SuccessScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
 import PersonalInfoScreen from './screens/PersonalInfoScreen';
 import GenotypeInfoScreen from './screens/GenotypeInfoScreen';
-import DonorAssessmentScreen from './screens/DonorAssessmentScreen';
-import DonorPoolAssessmentScreen from './screens/DonorPoolAssessmentScreen';
+import DonorAssessmentScreen from './screens/DonorAssessmentScreen'; // Pediatric Pathway Info
+import DonorPoolAssessmentScreen from './screens/DonorPoolAssessmentScreen'; // Pediatric Donor Search
 import DataIntegrityConfirmationScreen from './screens/DataIntegrityConfirmationScreen';
 import NotificationPreferenceScreen from './screens/NotificationPreferenceScreen';
 import HematologyBaselineScreen from './screens/HematologyBaselineScreen';
+import AdultDonorAssessmentScreen from './screens/AdultDonorAssessmentScreen'; // Adult Donor Search & Readiness
+import AdultPathwayScreen from './screens/AdultPathwayScreen'; // Adult Pathway Info
 import HomeScreen from './screens/HomeScreen';
 
 export default function App() {
@@ -64,9 +66,10 @@ export default function App() {
       />;
     case 'signin':
       return <SignInScreen 
+        onBack={() => setCurrentScreen('onboarding4')}
         onSignIn={() => setCurrentScreen('main')}
         onForgotPassword={() => setCurrentScreen('forgotpassword')}
-        onRegister={() => setCurrentScreen('main')}
+        onRegister={() => setCurrentScreen('createaccount')}
       />;
     case 'forgotpassword':
       return <ForgotPasswordScreen 
@@ -101,7 +104,6 @@ export default function App() {
         accountType={accountType}
         onBack={() => setCurrentScreen('createaccount')}
         onContinue={(data) => {
-          console.log('Personal info:', data);
           setCurrentScreen('genotypeinfo');
         }}
       />;
@@ -109,16 +111,31 @@ export default function App() {
       return <GenotypeInfoScreen 
         onBack={() => setCurrentScreen('personalinfo')}
         onContinue={(genotype) => {
-          console.log('Genotype selected:', genotype);
-          setCurrentScreen(accountType === 'adult' ? 'notificationpreference' : 'donorassessment');
+          // Pathway is the next step for both
+          setCurrentScreen(accountType === 'adult' ? 'adultpathway' : 'donorassessment');
         }}
       />;
-    case 'donorassessment':
+
+    // --- ADULT CURATIVE FLOW ---
+    case 'adultpathway':
+      return <AdultPathwayScreen 
+        onBack={() => setCurrentScreen('genotypeinfo')}
+        onContinue={() => setCurrentScreen('adultdonor')}
+      />;
+    case 'adultdonor':
+      return <AdultDonorAssessmentScreen 
+        onBack={() => setCurrentScreen('adultpathway')}
+        onSkip={() => setCurrentScreen('hematologybaseline')}
+        onSubmit={() => setCurrentScreen('hematologybaseline')}
+      />;
+
+    // --- PEDIATRIC CURATIVE FLOW ---
+    case 'donorassessment': // Pediatric Pathway Screen
       return <DonorAssessmentScreen 
         onBack={() => setCurrentScreen('genotypeinfo')}
         onContinue={() => setCurrentScreen('donorpool')}
       />;
-    case 'donorpool':
+    case 'donorpool': // Pediatric Donor Entry
       return <DonorPoolAssessmentScreen 
         onBack={() => setCurrentScreen('donorassessment')}
         onSkip={() => setCurrentScreen('main')}
@@ -129,14 +146,16 @@ export default function App() {
         onBack={() => setCurrentScreen('donorpool')}
         onContinue={() => setCurrentScreen('hematologybaseline')}
       />;
+
+    // --- FINAL DATA STEPS ---
     case 'hematologybaseline':
       return <HematologyBaselineScreen
-        onBack={() => setCurrentScreen('dataintegrity')}
+        onBack={() => (accountType === 'adult' ? setCurrentScreen('adultdonor') : setCurrentScreen('dataintegrity'))}
         onContinue={() => setCurrentScreen('notificationpreference')}
       />;
     case 'notificationpreference':
       return <NotificationPreferenceScreen
-        onBack={() => setCurrentScreen(accountType === 'adult' ? 'genotypeinfo' : 'hematologybaseline')}
+        onBack={() => setCurrentScreen('hematologybaseline')}
         onContinue={() => setCurrentScreen('main')}
       />;
     case 'main':

@@ -6,9 +6,12 @@ import {
   TouchableOpacity, 
   SafeAreaView, 
   Switch,
-  ScrollView 
+  ScrollView,
+  Dimensions
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+
+const { height } = Dimensions.get('window');
 
 const NotificationPreferenceScreen = ({ onBack, onContinue }) => {
   const [preferences, setPreferences] = useState({
@@ -23,17 +26,16 @@ const NotificationPreferenceScreen = ({ onBack, onContinue }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        {/* Header */}
-        <View style={styles.header}>
+        {/* Header Section with Drop */}
+        <View style={styles.headerContainer}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
             <Feather name="chevron-left" size={28} color="#B22222" />
+            <Text style={styles.title}>Notification Preference</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>Notification Preference</Text>
+          <Text style={styles.subtitle}>Choose how CareCell can support you</Text>
         </View>
-
-        <Text style={styles.subtitle}>Choose how CareCell can support you</Text>
 
         {/* Preference Cards */}
         <View style={styles.cardContainer}>
@@ -55,22 +57,23 @@ const NotificationPreferenceScreen = ({ onBack, onContinue }) => {
             />
           </View>
 
-          {/* Medication Reminders */}
-          <View style={styles.preferenceCard}>
-            <View style={[styles.iconCircle, { backgroundColor: '#FFE5E5' }]}>
-              <Feather name="pill" size={22} color="#FF3B30" />
-            </View>
-            <View style={styles.textGroup}>
-              <Text style={styles.cardTitle}>Medication Reminders</Text>
-              <Text style={styles.cardDescription}>Never miss your scheduled medications</Text>
-            </View>
-            <Switch
-              trackColor={{ false: '#D9D9D9', true: '#B22222' }}
-              thumbColor="#FFFFFF"
-              onValueChange={() => toggleSwitch('medication')}
-              value={preferences.medication}
-            />
-          </View>
+         {/* Medication Reminders */}
+<View style={styles.preferenceCard}>
+  <View style={[styles.iconCircle, { backgroundColor: '#FFE5E5' }]}>
+    {/* Changed from "pill" to "plus-square" */}
+    <Feather name="plus-square" size={22} color="#FF3B30" />
+  </View>
+  <View style={styles.textGroup}>
+    <Text style={styles.cardTitle}>Medication Reminders</Text>
+    <Text style={styles.cardDescription}>Never miss your scheduled medications</Text>
+  </View>
+  <Switch
+    trackColor={{ false: '#D9D9D9', true: '#B22222' }}
+    thumbColor="#FFFFFF"
+    onValueChange={() => toggleSwitch('medication')}
+    value={preferences.medication}
+  />
+</View>
 
           {/* Crisis Alerts */}
           <View style={styles.preferenceCard}>
@@ -111,33 +114,32 @@ const NotificationPreferenceScreen = ({ onBack, onContinue }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF9F0',
+    backgroundColor: '#FAF3E1', // Matched background for consistency
   },
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 40,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
-    marginLeft: -8,
+  headerContainer: {
+    marginTop: height * 0.08, // Standard header drop
+    marginBottom: 24,
   },
   backButton: {
-    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: -8,
   },
   title: {
-    fontSize: 22,
-    fontFamily: 'Brand-Bold',
+    fontSize: 26, // Updated to 26
+    fontWeight: 'bold', // Updated to Bold
     color: '#B22222',
     marginLeft: 4,
   },
   subtitle: {
     fontSize: 14,
-    fontFamily: 'Brand-Medium',
     color: '#6B5E5E',
-    marginTop: 8,
-    marginBottom: 24,
+    marginLeft: 25, // Aligned under the text
+    marginTop: 4,
   },
   cardContainer: {
     gap: 16,
@@ -148,18 +150,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     padding: 16,
-    // iOS Shadow
+    elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 10,
-    // Android Shadow
-    elevation: 2,
   },
   iconCircle: {
     width: 45,
     height: 45,
-    borderRadius: 22,
+    borderRadius: 22.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -170,12 +170,11 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontFamily: 'Brand-Bold',
+    fontWeight: 'bold',
     color: '#3D1A1A',
   },
   cardDescription: {
     fontSize: 12,
-    fontFamily: 'Brand-Regular',
     color: '#6B5E5E',
     marginTop: 2,
   },
@@ -188,22 +187,21 @@ const styles = StyleSheet.create({
   },
   infoNoteText: {
     fontSize: 12,
-    fontFamily: 'Brand-Regular',
     color: '#6B5E5E',
     textAlign: 'center',
   },
   createButton: {
     backgroundColor: '#B22222',
-    height: 56,
-    borderRadius: 16,
+    height: 55, // Consistent button height
+    borderRadius: 12, // Consistent button radius
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 40,
   },
   createButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontFamily: 'Brand-Bold',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

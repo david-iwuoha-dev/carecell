@@ -24,7 +24,7 @@ const HomeScreen = () => {
             <Text style={styles.userName}>David</Text>
           </View>
           <TouchableOpacity style={styles.profileButton}>
-             <Image source={require('./assets/icon2/adult.png')} style={styles.profileImage} />
+             <Image source={require('../assets/icon2/adult.png')} style={styles.profileImage} />
           </TouchableOpacity>
         </View>
 
@@ -80,7 +80,7 @@ const HomeScreen = () => {
         <Text style={styles.sectionTitle}>Up Next</Text>
         <View style={styles.medicationCard}>
           <View style={styles.medIconContainer}>
-            <Feather name="pill" size={24} color="#B22222" />
+            <Feather name="plus-square" size={24} color="#B22222" />
           </View>
           <View style={styles.medInfo}>
             <Text style={styles.medName}>Hydroxyurea</Text>
@@ -95,7 +95,7 @@ const HomeScreen = () => {
         <Text style={styles.sectionTitle}>Daily Insight</Text>
         <View style={styles.insightCard}>
           <View style={styles.insightIconContainer}>
-            <Image source={require('./assets/icon/icon-insight.png')} style={styles.insightIcon} />
+            <Image source={require('../assets/icon/icon-insight.png')} style={styles.insightIcon} />
           </View>
           <View style={styles.insightContent}>
             <Text style={styles.insightTitle}>Stay Hydrated</Text>

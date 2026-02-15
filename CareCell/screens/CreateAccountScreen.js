@@ -5,8 +5,11 @@ import {
   Text, 
   TouchableOpacity, 
   SafeAreaView,
-  Image
+  Image,
+  Dimensions
 } from 'react-native';
+
+const { height } = Dimensions.get('window');
 
 const CreateAccountScreen = ({ onBack, onContinue }) => {
   const [selectedType, setSelectedType] = useState('adult'); 
@@ -14,11 +17,13 @@ const CreateAccountScreen = ({ onBack, onContinue }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>
-        
-        {/* Header */}
+        {/* Header - Increased marginTop for better visibility */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Text style={styles.backIcon}>←</Text>
+            <Image 
+              source={require('../assets/icon2/Vector.png')} 
+              style={styles.vectorBackIcon}
+            />
           </TouchableOpacity>
           <Text style={styles.title}>Account Setup</Text>
         </View>
@@ -26,7 +31,6 @@ const CreateAccountScreen = ({ onBack, onContinue }) => {
         <Text style={styles.questionText}>Who are you creating this account for?</Text>
 
         <View style={styles.cardContainer}>
-          
           <TouchableOpacity 
             style={[styles.card, selectedType === 'adult' && styles.selectedCard]} 
             onPress={() => setSelectedType('adult')}
@@ -34,7 +38,7 @@ const CreateAccountScreen = ({ onBack, onContinue }) => {
           >
             <View style={styles.iconCircle}>
               <Image 
-                source={require('./assets/icon2/adult.png')} 
+                source={require('../assets/icon2/adult.png')} 
                 style={styles.iconImage}
               />
             </View>
@@ -51,7 +55,7 @@ const CreateAccountScreen = ({ onBack, onContinue }) => {
           >
             <View style={styles.iconCircle}>
               <Image 
-                source={require('./assets/icon2/child.png')} 
+                source={require('../assets/icon2/child.png')} 
                 style={styles.iconImage}
               />
             </View>
@@ -62,16 +66,19 @@ const CreateAccountScreen = ({ onBack, onContinue }) => {
           </TouchableOpacity>
         </View>
 
+        {/* Footer - Increased marginBottom to clear phone nav bars */}
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.continueButton} activeOpacity={0.8} onPress={() => onContinue(selectedType)}>
+          <TouchableOpacity 
+            style={styles.continueButton} 
+            activeOpacity={0.8} 
+            onPress={() => onContinue(selectedType)}
+          >
             <Text style={styles.continueText}>Continue</Text>
           </TouchableOpacity>
-          
           <TouchableOpacity style={styles.backToLoginContainer} onPress={onBack}>
             <Text style={styles.backToLoginText}>Back to login</Text>
           </TouchableOpacity>
         </View>
-
       </View>
     </SafeAreaView>
   );
@@ -85,31 +92,34 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 20,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: height * 0.06, // Doubled the margin to bring it down significantly
     marginBottom: 32,
     marginLeft: -8,
   },
   backButton: {
     padding: 8,
   },
-  backIcon: {
-    fontSize: 28,
-    color: '#B32626',
+  vectorBackIcon: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
+    tintColor: '#B32626',
   },
   title: {
-    fontSize: 20,
-    fontFamily: 'semi-Bold',
+    fontSize: 26,
+    fontFamily: 'Brand-Bold',
+    fontWeight: '700',
     color: '#B22222',
-    marginLeft: 4,
+    marginLeft: 8,
   },
   questionText: {
     fontSize: 14,
     color: '#484646',
-    fontFamily: 'semi-bold',
+    fontFamily: 'Brand-Bold',
     marginBottom: 24,
   },
   cardContainer: {
@@ -123,11 +133,6 @@ const styles = StyleSheet.create({
     borderColor: '#E8E8E8',
     borderRadius: 20,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
   },
   selectedCard: {
     borderColor: '#B32626',
@@ -152,40 +157,40 @@ const styles = StyleSheet.create({
   },
   optionTitle: {
     fontSize: 18,
-    fontFamily: 'medium',
+    fontFamily: 'Brand-Bold',
     color: '#484646',
     marginBottom: 4,
   },
   optionDescription: {
     fontSize: 14,
-    fontFamily: 'medium',
+    fontFamily: 'Brand-Regular',
     color: '#6B5E5E',
     lineHeight: 20,
   },
   footer: {
     marginTop: 'auto',
-    marginBottom: 30,
+    marginBottom: 80, // Increased from 40 to 80 to pull the buttons away from the bottom edge
   },
   continueButton: {
     backgroundColor: '#B22222',
-    height: 56,
-    borderRadius: 16,
+    height: 55, // Standard height
+    borderRadius: 12, // Standard radius
     justifyContent: 'center',
     alignItems: 'center',
   },
   continueText: {
     color: '#FFFFFF',
-    fontSize: 20,
-    fontFamily: 'semi-Bold',
+    fontSize: 18,
+    fontFamily: 'Brand-Bold',
   },
   backToLoginContainer: {
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 20, // Slightly more gap between the two buttons
   },
   backToLoginText: {
     color: '#B22222',
     fontSize: 16,
-    fontFamily: 'MEDIUM',
+    fontFamily: 'Brand-Bold',
   },
 });
 
